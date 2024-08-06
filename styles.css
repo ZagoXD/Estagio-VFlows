@@ -9,6 +9,7 @@ body {
     border: 1px solid #000;
     padding: 20px;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
 .loading-modal {
     position: fixed;
@@ -36,4 +37,8 @@ body {
 }
 .save-button-container {
     margin-top: 20px;
+}
+.centered-heading {
+    text-align: center;
+    width: 100%;
 }
