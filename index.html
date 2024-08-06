@@ -8,10 +8,13 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="container">
     <h1 class="mb-4 centered-heading">Cadastro de Fornecedor</h1>
     
+    <!-- Título "Dados do Fornecedor" -->
+    <div class="box-title">
+        <h2>Dados do Fornecedor</h2>
+    </div>
     <div class="box">
         <form id="formCadastro">
             <div class="form-row">
@@ -91,57 +94,37 @@
         </form>
     </div>
 
+    <!-- Título "Produtos" -->
+    <div class="box-title">
+        <h2>Produtos</h2>
+    </div>
     <div class="box">
-        <form>
-            <div class="form-group">
-                <label>Tabela de Produtos</label>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Unidade de Medida</th>
-                            <th>Quantidade em Estoque</th>
-                            <th>Valor Unitário</th>
-                            <th>Valor Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaProdutos">
-                        <tr>
-                            <td><input type="text" class="form-control descricaoProduto" required></td>
-                            <td><input type="text" class="form-control unidadeMedida" required></td>
-                            <td><input type="number" class="form-control qtdeEstoque" required></td>
-                            <td><input type="number" class="form-control valorUnitario" step="0.01" required></td>
-                            <td><input type="number" class="form-control valorTotal" readonly></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-success btn-block" id="addProduto">Adicionar Produto</button>
-            </div>
-        </form>
+        <div id="produtosContainer">
+            <!-- Div para produtos -->
+        </div>
+        <button type="button" class="btn btn-success btn-block" id="addProduto">Adicionar Produto</button>
     </div>
 
-    <div class="box">
+    <!-- Título "Anexos" -->
+    <div class="anexos-title">
+        <h2>Anexos</h2>
+    </div>
+    <div class="anexos-box">
         <form>
             <div class="form-group">
-                <label>Tabela de Anexos</label>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Arquivo</th>
                             <th>Ações</th>
+                            <th>Arquivo</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaAnexos">
-                        <tr>
-                            <td><input type="file" class="form-control-file anexoArquivo" required></td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm removerAnexo">Excluir</button>
-                                <button type="button" class="btn btn-primary btn-sm visualizarAnexo">Visualizar</button>
-                            </td>
-                        </tr>
+                        <!-- Inclusão de anexos aqui -->
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-success btn-block" id="addAnexo">Adicionar Anexo</button>
+                <input type="file" id="fileInput" style="display: none;">
+                <button type="button" class="btn btn-success btn-block" id="addAnexo">Incluir Anexo</button>
             </div>
         </form>
     </div>
