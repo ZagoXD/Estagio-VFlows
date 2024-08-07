@@ -1,4 +1,31 @@
 $(document).ready(() => {
+    // Função para garantir que apenas números sejam inseridos nos campos CEP e Número
+    $('#cep, #numero').on('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Função para formatar o número de telefone e limitar os caracteres
+    function formatarNumeroTelefone(input) {
+        var numero = input.value.replace(/\D/g, '');
+
+        if (numero.length > 0) {
+            numero = '(' + numero.substring(0, 2) + ') ' + numero.substring(2);
+        }
+        if (numero.length > 10) {
+            numero = numero.substring(0, 10) + '-' + numero.substring(10);
+        }
+        if (numero.length > 15) {
+            numero = numero.substring(0, 15);
+        }
+
+        input.value = numero;
+    }
+
+    // Aplica a formatação no campo de telefone ao digitar
+    $('#telefone').on('input', function() {
+        formatarNumeroTelefone(this);
+    });
+
     // Função para buscar dados do endereço pelo CEP
     $('#cep').on('blur', function() {
         const cep = $(this).val().replace(/\D/g, '');
@@ -24,7 +51,6 @@ $(document).ready(() => {
     // Função para processar o envio do formulário
     $('#formCadastro').on('submit', function(event) {
         event.preventDefault();
-        $('.loading-modal').show();
 
         // Verifica se há pelo menos um produto no container
         const produtos = [];
@@ -55,19 +81,24 @@ $(document).ready(() => {
         });
 
         if (produtos.length === 0) {
-            $('.loading-modal').hide();
             alert('Por favor, adicione pelo menos um produto.');
             return;
         }
 
         if (anexos.length === 0) {
-            $('.loading-modal').hide();
             alert('Por favor, adicione pelo menos um anexo.');
             return;
         }
 
-        // Se ambos são válidos, enviar dados
-        enviarDados(produtos, anexos);
+        // Mostrar o modal de carregamento e adicionar a classe 'd-flex'
+        $('.loading-modal').addClass('d-flex').show();
+
+        // Simula um carregamento de 2 segundos antes de enviar os dados e mostrar o alerta de sucesso
+        setTimeout(() => {
+            enviarDados(produtos, anexos);
+            // Remover a classe 'd-flex' e esconder o modal de carregamento
+            $('.loading-modal').removeClass('d-flex').hide();
+        }, 2000);
     });
 
     // Função para adicionar uma nova div de produto
@@ -215,11 +246,15 @@ $(document).ready(() => {
 
         console.log(JSON.stringify(dados, null, 2));
 
-        // Exibir alerta de sucesso
+        // Ocultar o modal de carregamento e exibir alerta de sucesso
         $('.loading-modal').hide();
+
+        // Exibir alerta de sucesso
         alert('Fornecedor Adicionado com sucesso!');
+
         // Resetar o formulário
         $('#formCadastro')[0].reset();
+
         // Limpar os produtos e anexos
         $('#produtosContainer').empty();
         $('#tabelaAnexos').empty();
