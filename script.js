@@ -75,18 +75,17 @@ $(document).ready(() => {
             if (!descricaoProduto || !unidadeMedida || !qtdeEstoque || !valorUnitario) {
                 produtosValidos = false;
                 mostrarAlerta('danger', 'Todos os campos de Produto são obrigatórios.', $(this).find('.alert-container'));
-                return false; // Interrompe o loop each
+            } else {
+                const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
+                produtos.push({
+                    indice: produtos.length + 1,
+                    descricaoProduto,
+                    unidadeMedida,
+                    qtdeEstoque,
+                    valorUnitario,
+                    valorTotal
+                });
             }
-
-            const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
-            produtos.push({
-                indice: produtos.length + 1,
-                descricaoProduto,
-                unidadeMedida,
-                qtdeEstoque,
-                valorUnitario,
-                valorTotal
-            });
         });
 
         // Verifica se há pelo menos um anexo na tabela
@@ -247,7 +246,6 @@ $(document).ready(() => {
     // Função para remover uma linha de anexo da tabela
     $(document).on('click', '.removerAnexo', function() {
         $(this).closest('tr').remove();
-        mostrarAlerta('danger', 'Anexo removido!', '#tabelaAnexos');
     });
 
     // Função para baixar um anexo
