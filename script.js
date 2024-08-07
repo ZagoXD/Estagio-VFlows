@@ -26,6 +26,16 @@ $(document).ready(() => {
         formatarNumeroTelefone(this);
     });
 
+    // Função para mostrar mensagem de alerta
+    function mostrarAlerta(tipo, mensagem, destino) {
+        const alertHtml = `<div class="alert alert-${tipo}" role="alert">${mensagem}</div>`;
+        $(destino).append(alertHtml);
+
+        setTimeout(() => {
+            $(destino).find('.alert').remove();
+        }, 5000); // Remove o alerta após 5 segundos
+    }
+
     // Função para buscar dados do endereço pelo CEP
     $('#cep').on('blur', function() {
         const cep = $(this).val().replace(/\D/g, '');
@@ -39,11 +49,11 @@ $(document).ready(() => {
                         $('#municipio').val(dados.localidade);
                         $('#estado').val(dados.uf);
                     } else {
-                        alert("CEP não encontrado.");
+                        mostrarAlerta('warning', 'CEP não encontrado.', '#cep').parent();
                     }
                 });
             } else {
-                alert("Formato de CEP inválido.");
+                mostrarAlerta('danger', 'Formato de CEP inválido.', '#cep').parent();
             }
         }
     });
@@ -54,22 +64,29 @@ $(document).ready(() => {
 
         // Verifica se há pelo menos um produto no container
         const produtos = [];
+        let produtosValidos = true; // Variável para verificar se todos os produtos são válidos
+
         $('#produtosContainer .product-box').each(function() {
             const descricaoProduto = $(this).find('input[id^="produtoNome"]').val();
-            if (descricaoProduto) {  // Verifica se o campo não está vazio
-                const unidadeMedida = $(this).find('select[id^="produtoUnidade"]').val();
-                const qtdeEstoque = $(this).find('input[id^="produtoQtd"]').val();
-                const valorUnitario = $(this).find('input[id^="produtoValor"]').val();
-                const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
-                produtos.push({
-                    indice: produtos.length + 1,
-                    descricaoProduto,
-                    unidadeMedida,
-                    qtdeEstoque,
-                    valorUnitario,
-                    valorTotal
-                });
+            const unidadeMedida = $(this).find('select[id^="produtoUnidade"]').val();
+            const qtdeEstoque = $(this).find('input[id^="produtoQtd"]').val();
+            const valorUnitario = $(this).find('input[id^="produtoValor"]').val();
+
+            if (!descricaoProduto || !unidadeMedida || !qtdeEstoque || !valorUnitario) {
+                produtosValidos = false;
+                mostrarAlerta('danger', 'Todos os campos de Produto são obrigatórios.', $(this).find('.alert-container'));
+                return false; // Interrompe o loop each
             }
+
+            const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
+            produtos.push({
+                indice: produtos.length + 1,
+                descricaoProduto,
+                unidadeMedida,
+                qtdeEstoque,
+                valorUnitario,
+                valorTotal
+            });
         });
 
         // Verifica se há pelo menos um anexo na tabela
@@ -87,12 +104,16 @@ $(document).ready(() => {
         });
 
         if (produtos.length === 0) {
-            alert('Por favor, adicione pelo menos um produto.');
+            mostrarAlerta('danger', 'Por favor, adicione pelo menos um produto.', '#produtosContainer');
             return;
         }
 
+        if (!produtosValidos) {
+            return; // Se algum produto for inválido, interrompe o envio do formulário
+        }
+
         if (anexos.length === 0) {
-            alert('Por favor, adicione pelo menos um anexo.');
+            mostrarAlerta('danger', 'Por favor, adicione pelo menos um anexo.', '#tabelaAnexos');
             return;
         }
 
@@ -153,6 +174,7 @@ $(document).ready(() => {
                         <input type="number" class="form-control" id="produtoTotal-${id}" readonly>
                     </div>
                 </div>
+                <div class="alert-container"></div>
             </div>`;
         $('#produtosContainer').append(newProduto);
     }
@@ -210,8 +232,8 @@ $(document).ready(() => {
                         <button type="button" class="btn btn-danger btn-sm removerAnexo">
                             <img src="assets/img/del.png" alt="Excluir">
                         </button>
-                        <button type="button" class="btn btn-primary btn-sm visualizarAnexo">
-                            <img src="assets/img/view.png" alt="Visualizar">
+                        <button type="button" class="btn btn-primary btn-sm downloadAnexo">
+                            <img src="assets/img/view.png" alt="View">
                         </button>
                     </td>
                     <td>${file.name}</td>
@@ -225,14 +247,19 @@ $(document).ready(() => {
     // Função para remover uma linha de anexo da tabela
     $(document).on('click', '.removerAnexo', function() {
         $(this).closest('tr').remove();
+        mostrarAlerta('danger', 'Anexo removido!', '#tabelaAnexos');
     });
 
-    // Função para visualizar um anexo
-    $(document).on('click', '.visualizarAnexo', function() {
+    // Função para baixar um anexo
+    $(document).on('click', '.downloadAnexo', function() {
         const fileName = $(this).closest('tr').find('td:last').text();
         const fileBlob = $(this).closest('tr').data('fileBlob');
-        const win = window.open();
-        win.document.write(`<iframe src="${fileBlob}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
+        const link = document.createElement('a');
+        link.href = fileBlob;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 
     // Função para enviar os dados
@@ -256,7 +283,7 @@ $(document).ready(() => {
         $('.loading-modal').hide();
 
         // Exibir alerta de sucesso
-        alert('Fornecedor Adicionado com sucesso!');
+        mostrarAlerta('success', 'Fornecedor Adicionado com sucesso!', '.container');
 
         // Resetar o formulário
         $('#formCadastro')[0].reset();
