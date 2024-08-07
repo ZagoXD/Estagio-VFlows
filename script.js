@@ -62,6 +62,7 @@ $(document).ready(() => {
                 const valorUnitario = $(this).find('input[id^="produtoValor"]').val();
                 const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
                 produtos.push({
+                    indice: produtos.length + 1,
                     descricaoProduto,
                     unidadeMedida,
                     qtdeEstoque,
@@ -73,10 +74,15 @@ $(document).ready(() => {
 
         // Verifica se há pelo menos um anexo na tabela
         const anexos = [];
-        $('#tabelaAnexos tr').each(function() {
+        $('#tabelaAnexos tr').each(function(index) {
             const nomeArquivo = $(this).find('td:nth-child(2)').text();
-            if (nomeArquivo) {
-                anexos.push({ nomeArquivo });
+            const fileBlob = $(this).data('fileBlob'); // Pega o blob do arquivo salvo anteriormente
+            if (nomeArquivo && fileBlob) {
+                anexos.push({
+                    indice: index + 1,
+                    nomeArquivo,
+                    blobArquivo: fileBlob // Blob do arquivo
+                });
             }
         });
 
@@ -112,12 +118,12 @@ $(document).ready(() => {
         const newProduto = `
             <div class="product-box" id="produto-${id}">
                 <button type="button" class="delete-btn" onclick="removeProduto(${id})">
-                    <img src="del.png" alt="Excluir">
+                    <img src="assets/img/del.png" alt="Excluir">
                 </button>
                 <h4>Produto - ${id}</h4>
                 <div class="form-row">
                     <div class="form-group col-md-1 d-flex align-items-center">
-                        <img src="item.png" alt="Produto" class="product-icon">
+                        <img src="assets/img/item.png" alt="Produto" class="product-icon">
                     </div>
                     <div class="form-group col-md-11">
                         <label for="produtoNome-${id}">Produto</label>
@@ -196,18 +202,23 @@ $(document).ready(() => {
         const fileInput = $(this);
         const file = fileInput[0].files[0];
         if (file) {
-            const newRow = `<tr>
-                <td class="table-actions">
-                    <button type="button" class="btn btn-danger btn-sm removerAnexo">
-                        <img src="del.png" alt="Excluir" style="width: 30px; height: 30px;">
-                    </button>
-                    <button type="button" class="btn btn-primary btn-sm visualizarAnexo">
-                        <img src="view.png" alt="Visualizar" style="width: 30px; height: 30px;">
-                    </button>
-                </td>
-                <td>${file.name}</td>
-            </tr>`;
-            $('#tabelaAnexos').append(newRow);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const blob = e.target.result;
+                const newRow = `<tr data-file-blob="${blob}">
+                    <td class="table-actions">
+                        <button type="button" class="btn btn-danger btn-sm removerAnexo">
+                            <img src="assets/img/del.png" alt="Excluir">
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm visualizarAnexo">
+                            <img src="assets/img/view.png" alt="Visualizar">
+                        </button>
+                    </td>
+                    <td>${file.name}</td>
+                </tr>`;
+                $('#tabelaAnexos').append(newRow);
+            };
+            reader.readAsDataURL(file); // Converte o arquivo em uma URL de dados
         }
     });
 
@@ -219,7 +230,9 @@ $(document).ready(() => {
     // Função para visualizar um anexo
     $(document).on('click', '.visualizarAnexo', function() {
         const fileName = $(this).closest('tr').find('td:last').text();
-        alert(`Visualizando anexo: ${fileName}`);
+        const fileBlob = $(this).closest('tr').data('fileBlob');
+        const win = window.open();
+        win.document.write(`<iframe src="${fileBlob}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
     });
 
     // Função para enviar os dados
@@ -230,16 +243,9 @@ $(document).ready(() => {
             cnpj: $('#cnpj').val(),
             inscricaoEstadual: $('#inscricaoEstadual').val(),
             inscricaoMunicipal: $('#inscricaoMunicipal').val(),
-            cep: $('#cep').val(),
-            rua: $('#rua').val(),
-            numero: $('#numero').val(),
-            complemento: $('#complemento').val(),
-            bairro: $('#bairro').val(),
-            municipio: $('#municipio').val(),
-            estado: $('#estado').val(),
             nomeContato: $('#nomeContato').val(),
-            telefone: $('#telefone').val(),
-            email: $('#email').val(),
+            telefoneContato: $('#telefone').val(),
+            emailContato: $('#email').val(),
             produtos,
             anexos
         };

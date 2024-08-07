@@ -9,22 +9,22 @@ body {
     max-width: 800px;
     margin: 0 auto;
 }
-.box {
+.box, .anexo-container {
     border: 1px solid #000;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 0px 0px 10px 10px;
-    border-top: none;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
-.box-title {
+.box-title, .anexos-title {
     background-color: #007bff;
     color: white;
     padding: 10px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    margin-bottom: -5px;
 }
-.box-title h2 {
+.box-title h2, .anexos-title h2 {
     font-size: 1rem;
     margin: 0;
 }
@@ -58,17 +58,17 @@ body {
 .delete-btn img {
     width: 30px;
     height: 30px;
-    background-color: red;
+    background-color: #dc3545;
     border-radius: 3px;
 }
 .delete-btn:hover img {
-    filter: brightness(0.8);
+    filter: brightness(0.77);
 }
-#addProduto {
+#addProduto, #addAnexo {
     background-color: #28a745;
     color: white;
 }
-#addProduto:hover {
+#addProduto:hover, #addAnexo:hover {
     background-color: #218838;
 }
 .save-button-container {
@@ -77,25 +77,6 @@ body {
 .centered-heading {
     text-align: center;
     width: 100%;
-}
-.anexos-box {
-    border: 1px solid #000;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-.anexos-title {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-.anexos-title h2 {
-    font-size: 1rem;
-    margin: 0;
 }
 .loading-modal {
     display: none; /* Inicialmente oculto */
@@ -110,4 +91,39 @@ body {
     color: white;
     font-size: 1.5rem;
     z-index: 1000; /* Certifique-se de que o modal esteja acima de outros elementos */
+}
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    background-color: transparent;
+}
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+.table .table {
+    background-color: #f8f9fa;
+}
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+.table-actions button {
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+}
+.table-actions button img {
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
 }
