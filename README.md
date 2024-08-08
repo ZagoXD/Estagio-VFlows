@@ -26,7 +26,7 @@ Para executar este projeto, você precisará ter os seguintes softwares instalad
     ```sh
     cd Estagio-VFlows
     ```
-3. Abra o arquivo `index.html` no seu navegador ou utilize uma extensão como o Live Server no VS Code para servir o projeto.
+3. Abra o arquivo `index.html` no seu navegador ou utilize uma extensão como o Live Server no VS Code para exibir o projeto.
 
 ## Uso
 
