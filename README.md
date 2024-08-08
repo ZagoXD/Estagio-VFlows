@@ -16,18 +16,6 @@ Para executar este projeto, você precisará ter os seguintes softwares instalad
 - Um servidor web para servir os arquivos HTML (pode ser o Live Server no VS Code, por exemplo)
 - Conexão com a Internet para carregar as dependências do Bootstrap e jQuery
 
-## Estrutura do Projeto
-
-Estagio-VFlows/
-├── assets/
-│ ├── img/
-│ │ ├── logo.png
-│ │ ├── del.png
-│ │ └── view.png
-├── index.html
-├── styles.css
-└── script.js
-
 ## Instalação
 
 1. Clone o repositório:
