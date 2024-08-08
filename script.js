@@ -74,7 +74,7 @@ $(document).ready(() => {
 
             if (!descricaoProduto || !unidadeMedida || !qtdeEstoque || !valorUnitario) {
                 produtosValidos = false;
-                mostrarAlerta('danger', 'Todos os campos de Produto são obrigatórios.', $(this).find('.alert-container'));
+                mostrarAlerta('warning', 'Todos os campos de Produto são obrigatórios.', $(this).find('.alert-container'));
             } else {
                 const valorTotal = $(this).find('input[id^="produtoTotal"]').val();
                 produtos.push({

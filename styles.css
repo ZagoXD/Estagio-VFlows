@@ -79,7 +79,7 @@ body {
     width: 100%;
 }
 .loading-modal {
-    display: none; /* Inicialmente oculto */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -90,7 +90,7 @@ body {
     align-items: center;
     color: white;
     font-size: 1.5rem;
-    z-index: 1000; /* Certifique-se de que o modal esteja acima de outros elementos */
+    z-index: 1000;
 }
 .table {
     width: 100%;
